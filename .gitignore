@@ -1,0 +1,9 @@
+# Transient skill scratch (session state, drafts)
+.warm-up/
+*.tmp
+outcome.txt
+status.txt
+
+# OS / editor noise
+.DS_Store
+Thumbs.db

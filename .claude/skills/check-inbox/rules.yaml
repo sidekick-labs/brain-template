@@ -1,0 +1,36 @@
+# Deterministic sender/subject routing for /check-inbox.
+#
+# Consulted BEFORE the LLM disposition step (skill step 4). The first rule whose
+# conditions all match the thread's LATEST message wins, and its disposition is
+# applied mechanically — no get_thread, no model judgment. Anything that matches
+# no rule falls through to normal LLM triage.
+#
+# Purpose: recurring, unambiguous senders shouldn't be re-judged every run. It's
+# cheaper (skips a model turn) and deterministic (the same newsletter can't be
+# Noise one day and Needs-review the next). Keep rules CONSERVATIVE: only encode
+# senders whose disposition is never in doubt. Mixed senders (a vendor that sends
+# both receipts AND action-required mail) should be qualified by `subject`, or
+# left to the LLM.
+#
+# Match fields (all are case-insensitive substring matches unless noted):
+#   from      - matches the sender address/domain. Prefer a FULL address (or a
+#               full sending-domain like `@info.example.com`) over a bare
+#               fragment: substring matching means a short fragment could also
+#               match a crafted display-name on a spoofed sender.
+#   subject   - matches anywhere in the subject line
+#   disposition - one of: noise | receipt | notification | calendar | review | leave
+#                 (NB: `file` is intentionally NOT allowed here — filing needs the
+#                  LLM to write the issue body. A rule asking to `file` is ignored.)
+#
+# This is the user-tunable layer; the skill is the engine. Add your own recurring
+# senders below. The examples are illustrative — replace them with yours.
+
+rules:
+  # --- Examples (edit/replace for your mailbox) ---
+  # - from: noreply@email.openai.com
+  #   disposition: noise
+  # - from: announcements@figma.com
+  #   disposition: noise
+  # - from: billing@yourvendor.com
+  #   subject: invoice
+  #   disposition: receipt

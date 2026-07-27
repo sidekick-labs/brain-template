@@ -1,0 +1,9 @@
+# This brain's identity. Run /setup to fill it in — you don't edit this by hand.
+name:            # e.g. design-ops-brain
+owner:           # person + email, e.g. Sam <sam@sidekicklabs.xyz>
+purpose:         # one line: "Owns X for <whom>, so that they can Y, without <failure mode>."
+created:         # YYYY-MM-DD, set by /setup
+
+# Intentionally minimal. Network wiring (Slack channel, GitHub Project board, owned
+# repos, cadence calendar) is ABSENT by design — this is a neutral brain with no
+# automated beats. Those are added only if someone later wires the coordination layer.
